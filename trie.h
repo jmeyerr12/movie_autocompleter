@@ -7,9 +7,12 @@
 #include <string.h>
 #include <wchar.h>
 
-#define ALPHABET_SIZE 27  // [a-z] e '\0' para final de palavra
-#define DIGITONULO 26
-#define indC(c) ((c) >= 'a' && (c) <= 'z' ? (c) - 'a' : ALPHABET_SIZE - 1) 
+#define ALPHABET_SIZE 38  // [0-9], [a-z], ' ', '\0'
+
+#define indC(c) ((c) == '\0' ? 37 : \
+                 (c) >= '0' && (c) <= '9' ? (c) - '0' : \
+                 (c) >= 'a' && (c) <= 'z' ? 10 + (c) - 'a' : \
+                 (c) == ' ' ? 36 : -1)
 
 
 typedef struct Nodo {
@@ -26,7 +29,8 @@ void criaArv(ApNodo *raiz);
 void insere(ApNodo *raiz, const char *palavra);
 ApNodo busca(ApNodo raiz, const char *palavra);
 void escreve(ApNodo raiz);
-void printTrie(ApNodo raiz, int nivel);
+void imprimeTrie(ApNodo raiz, int nivel);
+void imprimeTrieArquivo(ApNodo p, char *prefixo, FILE *saida);
 
 #endif
 

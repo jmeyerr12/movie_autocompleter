@@ -70,18 +70,53 @@ int ehFolha(ApNodo no) {
     return 1; // É folha
 }
 
-void printTrie(ApNodo raiz, int nivel) {
+void imprimeTrie(ApNodo raiz, int nivel) {
+    if (raiz == NULL) {
+        return; // Adiciona segurança contra chamadas com nó nulo
+    }
+
     if (ehFolha(raiz)) {
         for (int i = 0; i < nivel; i++) printf("   ");
-        printf("\\0\n");
+        printf("\\0\n");  // Indica o final de uma palavra na Trie
         return;
     }
 
     for (int i = 0; i < ALPHABET_SIZE; i++) {
         if (raiz->filhos[i] != NULL) {
             for (int j = 0; j < nivel; j++) printf("   ");
-            printf("%c\n", (i == 26) ? ' ' : 'a' + i);
-            printTrie(raiz->filhos[i], nivel + 1);
+            if (i < 10) {
+                printf("%c\n", '0' + i); // Números primeiro
+            } else if (i >= 10 && i < 36) {
+                printf("%c\n", 'a' + (i - 10)); // Letras em seguida
+            } else if (i == 36) {
+                printf(" \n"); // Espaço no final
+            }
+            imprimeTrie(raiz->filhos[i], nivel + 1);
         }
     }
 }
+
+char indToChar(int index) {
+    if (index >= 0 && index <= 9) return '0' + index;       // Números de 0 a 9
+    if (index >= 10 && index <= 35) return 'a' + (index - 10); // Letras de a a z
+    if (index == 36) return ' ';                          // Espaço
+    if (index == 37) return '\0';                         // Fim de palavra
+    return '?';                                           // Caso índice inválido
+}
+
+
+void imprimeTrieArquivo(ApNodo p, char *prefixo, FILE *saida) {
+    if (p == NULL) return;
+    if (p->filhos[indC('\0')] != NULL) {
+        fprintf(saida, "%s\n", prefixo);
+    }
+
+    char next[1000]; // Supondo limitação razoável para títulos de filmes
+    for (int i = 0; i < ALPHABET_SIZE; i++) {
+        if (p->filhos[i] != NULL) {
+            sprintf(next, "%s%c", prefixo, indToChar(i)); // Convertendo índice para caractere
+            imprimeTrieArquivo(p->filhos[i], next, saida);
+        }
+    }
+}
+
