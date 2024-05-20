@@ -1,11 +1,11 @@
 p Rocky
 rocky
-rocky ii 
+rocky ii
 rocky iii
 rocky iv
 rocky v
 l New York Minute Madness
-new york minute 
+new york minute
 c 19..
 1920
 1922

@@ -34,8 +34,8 @@ void insere(ApNodo *raiz, const char *palavra) {
         palavra++;
     }
 
-    if (!p->filhos[ALPHABET_SIZE - 1]) {
-        p->filhos[ALPHABET_SIZE - 1] = criaNodo();
+    if (!p->filhos[0]) {
+        p->filhos[0] = criaNodo();
     }
 }
 
@@ -51,7 +51,7 @@ ApNodo busca(ApNodo raiz, const char *palavra) {
         palavra++;
     }
 
-    if (p->filhos[ALPHABET_SIZE - 1] != NULL) return p->filhos[ALPHABET_SIZE - 1]; 
+    if (p->filhos[0] != NULL) return p->filhos[0]; 
     return NULL;
 }
 
@@ -97,10 +97,10 @@ void imprimeTrie(ApNodo raiz, int nivel) {
 }
 
 char indToChar(int index) {
-    if (index >= 0 && index <= 9) return '0' + index;       // Números de 0 a 9
-    if (index >= 10 && index <= 35) return 'a' + (index - 10); // Letras de a a z
-    if (index == 36) return ' ';                          // Espaço
-    if (index == 37) return '\0';                         // Fim de palavra
+    if (index >= 2 && index <= 11) return '0' + index-2;       // Números de 0 a 9
+    if (index >= 12 && index <= 37) return 'a' + (index - 12); // Letras de a a z
+    if (index == 1) return ' ';                          // Espaço
+    if (index == 0) return '\0';                         // Fim de palavra
     return '?';                                           // Caso índice inválido
 }
 

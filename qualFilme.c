@@ -32,9 +32,46 @@ void listarMaisLongoPrefixo(ApNodo root, char *consulta, FILE *saida) {
     }
 }
 
-void listarPadrao(ApNodo root, char *consulta, FILE *saida) {
-    ApNodo p = root;
-    
+void buscaCuringa(ApNodo node, const char *padrao, int pos, char *prefixo, FILE *saida) {
+    if (node == NULL) return;
+
+    if (padrao[pos] == '\0') {
+        if (node->filhos[indC('\0')] != NULL) {
+            fprintf(saida, "%s\n", prefixo);
+        }
+        return;
+    }
+
+    if (padrao[pos] == '.') {
+        for (int i = 0; i <= ALPHABET_SIZE; i++) {
+            if (node->filhos[i] != NULL) {
+                char next[1000];
+                sprintf(next, "%s%c", prefixo, indToChar(i));
+                buscaCuringa(node->filhos[i], padrao, pos + 1, next, saida);
+            }
+        }
+    } else if (padrao[pos] == '*') {
+        buscaCuringa(node, padrao, pos + 1, prefixo, saida);
+        for (int i = 0; i <= ALPHABET_SIZE; i++) {
+            if (node->filhos[i] != NULL) {
+                char next[1000];
+                sprintf(next, "%s%c", prefixo, indToChar(i));
+                buscaCuringa(node->filhos[i], padrao, pos, next, saida);
+            }
+        }
+    } else {
+        int ind = indC(padrao[pos]);
+        if (ind != -1 && node->filhos[ind] != NULL) {
+            char next[1000];
+            sprintf(next, "%s%c", prefixo, padrao[pos]);
+            buscaCuringa(node->filhos[ind], padrao, pos + 1, next, saida);
+        }
+    }
+}
+
+void listarComCuringa(ApNodo root, const char *padrao, FILE *saida) {
+    char prefixo[1000] = "";
+    buscaCuringa(root, padrao, 0, prefixo, saida);
 }
 
 char* padronizaString(char* entrada) {
@@ -104,9 +141,9 @@ int main(int argc, char *argv[])
             listarPrefixo(root, argument, saida);
         } else if (result[0] == 'l') { // Mais longo prefixo
             listarMaisLongoPrefixo(root, argument, saida);
-        }/* else if (linha[0] == 'c') { // Curinga
-            listarComCuringa(root, argument);
-        }*/
+        } else if (linha[0] == 'c') { // Curinga
+            listarComCuringa(root, argument, saida);
+        }
         free(result);
     }
     
