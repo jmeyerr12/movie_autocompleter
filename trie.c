@@ -10,7 +10,7 @@ ApNodo criaNodo() {
         fprintf(stderr, "Erro ao alocar memória\n");
         exit(EXIT_FAILURE);  // Ou qualquer outro tratamento de erro apropriado
     }
-    for (int i = 0; i < ALPHABET_SIZE; i++) 
+    for (int i = 0; i <= ALPHABET_SIZE; i++) 
         n->filhos[i] = NULL;
     return n;
 }
@@ -23,7 +23,7 @@ void insere(ApNodo *raiz, const char *palavra) {
     ApNodo p = *raiz;
     while (*palavra) {
         int index = indC(*palavra);
-        if (index < 0 || index >= ALPHABET_SIZE) {
+        if (index < 0 || index > ALPHABET_SIZE) {
             fprintf(stderr, "Caractere '%c' fora do intervalo permitido\n", *palavra);
             continue;  // Pula caracteres inválidos
         }
@@ -57,12 +57,12 @@ ApNodo busca(ApNodo raiz, const char *palavra) {
 
 void freeArv(ApNodo raiz) {
     if (raiz == NULL) return;
-    for (int i = 0; i < ALPHABET_SIZE; i++) freeArv(raiz->filhos[i]);
+    for (int i = 0; i <= ALPHABET_SIZE; i++) freeArv(raiz->filhos[i]);
     free(raiz);
 }
 
 int ehFolha(ApNodo no) {
-    for (int i = 0; i < ALPHABET_SIZE; i++) {
+    for (int i = 0; i <= ALPHABET_SIZE; i++) {
         if (no->filhos[i] != NULL) {
             return 0; // Não é folha
         }
@@ -81,7 +81,7 @@ void imprimeTrie(ApNodo raiz, int nivel) {
         return;
     }
 
-    for (int i = 0; i < ALPHABET_SIZE; i++) {
+    for (int i = 0; i <= ALPHABET_SIZE; i++) {
         if (raiz->filhos[i] != NULL) {
             for (int j = 0; j < nivel; j++) printf("   ");
             if (i < 10) {
@@ -112,7 +112,7 @@ void imprimeTrieArquivo(ApNodo p, char *prefixo, FILE *saida) {
     }
 
     char next[1000]; // Supondo limitação razoável para títulos de filmes
-    for (int i = 0; i < ALPHABET_SIZE; i++) {
+    for (int i = 0; i <= ALPHABET_SIZE; i++) {
         if (p->filhos[i] != NULL) {
             sprintf(next, "%s%c", prefixo, indToChar(i)); // Convertendo índice para caractere
             imprimeTrieArquivo(p->filhos[i], next, saida);

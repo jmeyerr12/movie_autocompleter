@@ -49,6 +49,8 @@ char* padronizaString(char* entrada) {
                    (*entrada >= '0' && *entrada <= '9') || 
                    (*entrada == ' ') || (*entrada == '.') || (*entrada == '*')) {
             *p++ = *entrada;
+        } else if (*entrada != '\n') {
+            *p++ = '?';
         }
         entrada++;
     }

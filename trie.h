@@ -12,11 +12,11 @@
 #define indC(c) ((c) == '\0' ? 37 : \
                  (c) >= '0' && (c) <= '9' ? (c) - '0' : \
                  (c) >= 'a' && (c) <= 'z' ? 10 + (c) - 'a' : \
-                 (c) == ' ' ? 36 : -1)
+                 (c) == ' ' ? 36 : 38)
 
 
 typedef struct Nodo {
-    struct Nodo *filhos[ALPHABET_SIZE];  // Apontadores para os filhos
+    struct Nodo *filhos[ALPHABET_SIZE+1];  // Apontadores para os filhos
 } Nodo;
 
 typedef Nodo* ApNodo;
