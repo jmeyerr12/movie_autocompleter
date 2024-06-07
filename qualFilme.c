@@ -96,62 +96,58 @@ char* padronizaString(char* entrada) {
     return nova;
 }
 
-int main(int argc, char *argv[])
-{
-    FILE *filmes, *consultas, *saida;
+int main(int argc, char *argv[]) {
+    FILE *filmes;
     char *linha = NULL;
-    char* result = NULL;
+    char *result = NULL;
     int status;
     unsigned long tamLinha;
     ApNodo root;
-    
+
     criaArv(&root);
 
     // abre arquivo de entrada
-    if( argc != 4 ){
-        printf( "Erro nos argumentos da chamada\n" );
-        printf( "Chamada: ./qualFilme filmes.txt < consultas.txt > saida.txt\n" );
+    if (argc != 2) {
+        printf("Erro nos argumentos da chamada\n");
+        printf("Chamada: ./qualFilme filmes.txt < consultas.txt > saida.txt\n");
         return 0;
     }
     
-    filmes = fopen( argv[1], "r" );
-    consultas = fopen( argv[2], "r" );
-    saida = fopen( argv[3], "w" );
-    
-    if( filmes == NULL || consultas == NULL || saida == NULL){
-        printf( "Erro na abertura do arquivo\n" );
+    filmes = fopen(argv[1], "r");
+
+    if (filmes == NULL) {
+        printf("Erro na abertura do arquivo de filmes\n");
         return 0;
     }
 
+    // Processa o arquivo de filmes
     while ((status = getline(&linha, &tamLinha, filmes)) != -1) {
         result = padronizaString(linha); 
         insere(&root, result);
         free(result);
     }
- 
-    //char c[100];// = "Rocky I";
-    //sprintf(c, "%c", indC('I'));
-    //printf("%s\n", padronizaString(c));
-    
-    while ((status = getline(&linha, &tamLinha, consultas)) != -1) {
-        result = padronizaString(linha); 
-        fprintf(saida, "%s", linha);
+
+    fclose(filmes);
+    free(linha);
+    linha = NULL;
+
+    // Processa as consultas a partir da entrada padrão
+    while ((status = getline(&linha, &tamLinha, stdin)) != -1) {
+        result = padronizaString(linha);
+        printf("%s", linha);
         char *argument = result + 2;
         if (result[0] == 'p') { // Prefixo
-            listarPrefixo(root, argument, saida);
+            listarPrefixo(root, argument, stdout);
         } else if (result[0] == 'l') { // Mais longo prefixo
-            listarMaisLongoPrefixo(root, argument, saida);
-        } else if (linha[0] == 'c') { // Curinga
-            listarComCuringa(root, argument, saida);
+            listarMaisLongoPrefixo(root, argument, stdout);
+        } else if (result[0] == 'c') { // Curinga
+            listarComCuringa(root, argument, stdout);
         }
         free(result);
     }
     
-    
     free(linha);
     freeArv(root);
-    fclose(filmes);
-    fclose(consultas);
-    fclose(saida);
+
     return 0;
 }
